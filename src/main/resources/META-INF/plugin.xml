@@ -1,0 +1,21 @@
+<idea-plugin>
+    <id>danilovl.parameterbundle</id>
+    <name>Parameter Bundle</name>
+    <vendor url="https://github.com/danilovl">danilovl</vendor>
+
+    <depends>com.jetbrains.php</depends>
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <dom.fileMetaData
+                implementation="danilovl.parameterbundle.meta.ContainerDomFileDescription"
+                rootTagName="container"
+        />
+
+        <completion.contributor
+                language="PHP"
+                implementationClass="danilovl.parameterbundle.completion.ParameterCompletionContributor"
+                order="first"
+        />
+    </extensions>
+</idea-plugin>
