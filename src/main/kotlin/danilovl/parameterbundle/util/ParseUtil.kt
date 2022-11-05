@@ -35,7 +35,7 @@ class ParseUtil {
             val containerParameters: List<ParameterDomElement?>? = root.getParameters()!!.getParameters()
 
             containerParameters?.forEach {
-                parameters = parameters.plus(XmlUtil.recursiveXml(it!!.xmlTag!!)) as HashMap<String, String>
+                parameters = parameters.plus(XmlUtil.parseXmlTag(it!!.xmlTag!!)) as HashMap<String, String>
             }
 
             return parameters

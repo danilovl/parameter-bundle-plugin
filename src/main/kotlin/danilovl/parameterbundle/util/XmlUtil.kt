@@ -4,7 +4,7 @@ import com.intellij.psi.xml.XmlTag
 
 class XmlUtil {
     companion object {
-        fun recursiveXml(xmlTag: XmlTag, actualKey: String? = null): HashMap<String, String> {
+        fun parseXmlTag(xmlTag: XmlTag, actualKey: String? = null): HashMap<String, String> {
             var parameters = HashMap<String, String>()
             var key = xmlTag.getAttribute("key")?.value
             val value = xmlTag.value.text
@@ -29,7 +29,7 @@ class XmlUtil {
 
                 val subTags = xmlTag.subTags
                 subTags.forEach { subTag: XmlTag ->
-                    parameters = parameters.plus(recursiveXml(subTag, key)) as HashMap<String, String>
+                    parameters = parameters.plus(parseXmlTag(subTag, key)) as HashMap<String, String>
                 }
 
                 return parameters
