@@ -5,7 +5,11 @@ Simple plugin for `Symfony ParameterBundle` which help to find and autocomplete 
 
 * [ParameterBundle](https://github.com/danilovl/parameter-bundle) - Symfony bundle provides comfortable getting parameters from config.
 
-![Alt text](/screenshot/autocomplete.gif?raw=true "Autocompleteexample")
+#### PHP
+![Alt text](/screenshot/php-autocomplete.gif?raw=true "Autocomplete php example")
+
+#### TWIG
+![Alt text](/screenshot/twig-autocomplete.gif?raw=true "Autocomplete twig example")
 
 ### Requirements
 

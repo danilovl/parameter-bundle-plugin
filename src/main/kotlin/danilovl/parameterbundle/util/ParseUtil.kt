@@ -17,7 +17,7 @@ class ParseUtil {
         fun getKernelDevDebugContainerParameters(project: Project): HashMap<String, String> {
             var parameters = HashMap<String, String>()
 
-            val filePath = project.basePath!! + Setting.DEFAULT_DEV_DEBUG_CONTAINER_PATH
+            val filePath = project.basePath!! + Setting.DEV_DEBUG_CONTAINER_XML_PATH
             val kernelDevDebugContainer = File(filePath)
 
             val virtualKernelDevDebugContainerFile = VfsUtil.findFileByIoFile(kernelDevDebugContainer, false)

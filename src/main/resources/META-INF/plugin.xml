@@ -4,6 +4,7 @@
     <vendor url="https://github.com/danilovl">danilovl</vendor>
 
     <depends>com.jetbrains.php</depends>
+    <depends>com.jetbrains.twig</depends>
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -14,7 +15,13 @@
 
         <completion.contributor
                 language="PHP"
-                implementationClass="danilovl.parameterbundle.completion.ParameterCompletionContributor"
+                implementationClass="danilovl.parameterbundle.completion.PhpParameterCompletionContributor"
+                order="first"
+        />
+
+        <completion.contributor
+                language="Twig"
+                implementationClass="danilovl.parameterbundle.completion.TwigParameterCompletionContributor"
                 order="first"
         />
     </extensions>

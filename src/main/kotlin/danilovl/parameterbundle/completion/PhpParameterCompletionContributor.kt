@@ -6,7 +6,7 @@ import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiElement
 import com.jetbrains.php.lang.lexer.PhpTokenTypes
 
-class ParameterCompletionContributor : CompletionContributor() {
+class PhpParameterCompletionContributor : CompletionContributor() {
     override fun invokeAutoPopup(position: PsiElement, typeChar: Char): Boolean {
         return typeChar == '\'' || typeChar == '"'
     }
@@ -18,7 +18,7 @@ class ParameterCompletionContributor : CompletionContributor() {
                 PlatformPatterns.psiElement(PhpTokenTypes.STRING_LITERAL),
                 PlatformPatterns.psiElement(PhpTokenTypes.STRING_LITERAL_SINGLE_QUOTE)
             ),
-            ParameterCompletionProvider()
+            PhpParameterCompletionProvider()
         )
     }
 }
