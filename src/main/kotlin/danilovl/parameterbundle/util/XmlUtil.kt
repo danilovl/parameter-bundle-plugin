@@ -43,5 +43,46 @@ class XmlUtil {
 
             return parameters
         }
+
+        fun parseXmlTagWithOnlyValue(xmlTag: XmlTag, actualKey: String? = null): HashMap<String, XmlTag> {
+            var parameters = HashMap<String, XmlTag>()
+            var key = xmlTag.getAttribute("key")?.value
+            val value = xmlTag.value.text
+
+            if (key === null || value.isEmpty()) {
+                return parameters
+            }
+
+            val type = xmlTag.getAttribute("type")?.value
+            if (type.equals("collection")) {
+                if (actualKey !== null) {
+                    key = "$actualKey.$key"
+                }
+
+                val subTags = xmlTag.subTags
+                val firstSubTag = subTags.first()
+
+                val firstSubTagKey = firstSubTag.getAttribute("key")?.value
+                if (firstSubTagKey === null) {
+                    parameters[key] = xmlTag
+
+                    return parameters
+                }
+
+                subTags.forEach { subTag: XmlTag ->
+                    parameters = parameters.plus(parseXmlTagWithOnlyValue(subTag, key)) as HashMap<String, XmlTag>
+                }
+
+                return parameters
+            }
+
+            if (actualKey !== null) {
+                key = "$actualKey.$key"
+            }
+
+            parameters[key] = xmlTag
+
+            return parameters
+        }
     }
 }

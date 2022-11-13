@@ -5,6 +5,7 @@
 
     <depends>com.jetbrains.php</depends>
     <depends>com.jetbrains.twig</depends>
+    <depends>org.jetbrains.plugins.yaml</depends>
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -18,11 +19,19 @@
                 implementationClass="danilovl.parameterbundle.completion.PhpParameterCompletionContributor"
                 order="first"
         />
-
         <completion.contributor
                 language="Twig"
                 implementationClass="danilovl.parameterbundle.completion.TwigParameterCompletionContributor"
                 order="first"
+        />
+
+        <psi.referenceContributor
+                language="PHP"
+                implementation="danilovl.parameterbundle.reference.PhpParameterReferenceContributor"
+        />
+        <gotoDeclarationHandler
+                language="Twig"
+                implementation="danilovl.parameterbundle.reference.TwigParameterGoToDeclaration"
         />
     </extensions>
 </idea-plugin>

@@ -8,8 +8,12 @@ Simple plugin for `Symfony ParameterBundle` which help to find and autocomplete 
 #### PHP
 ![Alt text](/screenshot/php-autocomplete.gif?raw=true "Autocomplete php example")
 
+![Alt text](/screenshot/php-go-to-declaration.gif?raw=true "Go to declaration php example")
+
 #### TWIG
 ![Alt text](/screenshot/twig-autocomplete.gif?raw=true "Autocomplete twig example")
+
+![Alt text](/screenshot/twig-go-to-declaration.gif?raw=true "Go to declaration twig example")
 
 ### Requirements
 

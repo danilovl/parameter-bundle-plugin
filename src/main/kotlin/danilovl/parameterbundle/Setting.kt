@@ -4,6 +4,10 @@ class Setting {
     companion object {
         const val PARAMETER_SERVICE_INTERFACE_NAMESPACE = "\\Danilovl\\ParameterBundle\\Interfaces\\ParameterServiceInterface"
         const val DEV_DEBUG_CONTAINER_XML_PATH = "/var/cache/dev/App_KernelDevDebugContainer.xml"
+        const val CONFIG_DIR = "/config"
+        const val YAML_EXTENSION = "yaml"
+        const val DEFAULT_PARAMETERS_KEY = "parameters"
+        const val DEFAULT_PARAMETERS_KEY_SEPARATOR = "."
 
         val TWIG_FUNCTION_NAMES = arrayOf(
             "parameter_get",

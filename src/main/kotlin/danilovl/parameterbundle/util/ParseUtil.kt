@@ -2,43 +2,75 @@ package danilovl.parameterbundle.util
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VfsUtil
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.xml.XmlFile
 import com.intellij.util.xml.DomManager
 import danilovl.parameterbundle.Setting
+import danilovl.parameterbundle.cache.ParameterKeyReference
 import danilovl.parameterbundle.meta.ParameterDomElement
 import danilovl.parameterbundle.meta.RootDomElement
 import java.io.File
-import java.util.HashMap
 
 class ParseUtil {
     companion object {
         fun getKernelDevDebugContainerParameters(project: Project): HashMap<String, String> {
             var parameters = HashMap<String, String>()
 
+            val containerParameters = getContainerParameters(project)
+            if (containerParameters === null) {
+                return parameters
+            }
+
+            containerParameters.forEach {
+                parameters = parameters.plus(XmlUtil.parseXmlTag(it!!.xmlTag!!)) as HashMap<String, String>
+            }
+
+            return parameters
+        }
+
+        fun getKeyReferences(project: Project): HashMap<String, ParameterKeyReference> {
+            val keyReference = HashMap<String, ParameterKeyReference>()
+
+            val containerParameters = getContainerParameters(project)
+            if (containerParameters === null) {
+                return keyReference
+            }
+
+            var keyXmlTagReference = HashMap<String, PsiElement>()
+
+            containerParameters.forEach {
+                keyXmlTagReference = keyXmlTagReference.plus(XmlUtil.parseXmlTagWithOnlyValue(it!!.xmlTag!!)) as HashMap<String, PsiElement>
+            }
+
+            keyXmlTagReference.forEach {
+                keyReference[it.key] = ParameterKeyReference(xml = it.value)
+            }
+
+            YamlUtil.parseConfigYaml(keyReference, project)
+
+            return keyReference
+        }
+
+        private fun getContainerParameters(project: Project): List<ParameterDomElement?>? {
             val filePath = project.basePath!! + Setting.DEV_DEBUG_CONTAINER_XML_PATH
             val kernelDevDebugContainer = File(filePath)
 
             val virtualKernelDevDebugContainerFile = VfsUtil.findFileByIoFile(kernelDevDebugContainer, false)
             if (virtualKernelDevDebugContainerFile == null || !virtualKernelDevDebugContainerFile.exists()) {
-                return parameters
+                return null
             }
 
             val psiFile: PsiFile = PsiManager.getInstance(project).findFile(virtualKernelDevDebugContainerFile)!!
             if (psiFile !is XmlFile) {
-                return parameters
+                return null
             }
 
             val domManager = DomManager.getDomManager(project)
             val root: RootDomElement = domManager.getFileElement(psiFile, RootDomElement::class.java)!!.getRootElement()
-            val containerParameters: List<ParameterDomElement?>? = root.getParameters()!!.getParameters()
 
-            containerParameters?.forEach {
-                parameters = parameters.plus(XmlUtil.parseXmlTag(it!!.xmlTag!!)) as HashMap<String, String>
-            }
-
-            return parameters
+            return root.getParameters()!!.getParameters()
         }
     }
 }
