@@ -6,8 +6,10 @@ class Setting {
         const val DEV_DEBUG_CONTAINER_XML_PATH = "/var/cache/dev/App_KernelDevDebugContainer.xml"
         const val CONFIG_DIR = "/config"
         const val YAML_EXTENSION = "yaml"
-        const val DEFAULT_PARAMETERS_KEY = "parameters"
-        const val DEFAULT_PARAMETERS_KEY_SEPARATOR = "."
+        const val PARAMETERS_KEY = "parameters"
+        const val BUNDLE_CONFIGURATION_KEY = "danilovl_parameter.delimiter"
+        const val DEFAULT_PARAMETERS_KEY_DELIMITER = "."
+        var PARAMETERS_KEY_DELIMITER = DEFAULT_PARAMETERS_KEY_DELIMITER
 
         val TWIG_FUNCTION_NAMES = arrayOf(
             "parameter_get",
@@ -18,5 +20,9 @@ class Setting {
             "parameter_get_array",
             "parameter_has"
         )
+
+        fun setDelimiter(delimiter: String) {
+            this.PARAMETERS_KEY_DELIMITER = delimiter
+        }
     }
 }

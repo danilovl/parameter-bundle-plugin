@@ -23,9 +23,9 @@ class YamlUtil {
 
                         if (psiFile is YAMLFile) {
                             keyReference.forEach { keyReferenceValue ->
-                                val keys = Setting.DEFAULT_PARAMETERS_KEY + Setting.DEFAULT_PARAMETERS_KEY_SEPARATOR + keyReferenceValue.key
+                                val keys = Setting.PARAMETERS_KEY + Setting.PARAMETERS_KEY_DELIMITER + keyReferenceValue.key
 
-                                val keyValue = YAMLUtil.getQualifiedKeyInFile(psiFile, keys.split(Setting.DEFAULT_PARAMETERS_KEY_SEPARATOR))
+                                val keyValue = YAMLUtil.getQualifiedKeyInFile(psiFile, keys.split(Setting.PARAMETERS_KEY_DELIMITER))
                                 if (keyValue !== null) {
                                     keyReference[keyReferenceValue.key]!!.yaml = keyValue
                                 }

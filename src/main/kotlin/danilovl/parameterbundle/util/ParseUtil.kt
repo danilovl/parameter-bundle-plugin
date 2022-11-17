@@ -16,6 +16,8 @@ import java.io.File
 class ParseUtil {
     companion object {
         fun getKernelDevDebugContainerParameters(project: Project): HashMap<String, String> {
+            setParametersKeyDelimiter(project)
+
             var parameters = HashMap<String, String>()
 
             val containerParameters = getContainerParameters(project)
@@ -31,6 +33,8 @@ class ParseUtil {
         }
 
         fun getKeyReferences(project: Project): HashMap<String, ParameterKeyReference> {
+            setParametersKeyDelimiter(project)
+
             val keyReference = HashMap<String, ParameterKeyReference>()
 
             val containerParameters = getContainerParameters(project)
@@ -53,6 +57,27 @@ class ParseUtil {
             return keyReference
         }
 
+        private fun setParametersKeyDelimiter(project: Project) {
+            val containerParameters = getContainerParameters(project)
+            if (containerParameters === null) {
+                Setting.setDelimiter(Setting.DEFAULT_PARAMETERS_KEY_DELIMITER)
+
+                return
+            }
+
+            for (parameterDomElement: ParameterDomElement? in containerParameters) {
+                val key = parameterDomElement!!.xmlTag!!.getAttribute("key")?.value
+                if (key == Setting.BUNDLE_CONFIGURATION_KEY) {
+                    val value = parameterDomElement.xmlTag!!.value.text
+                    Setting.setDelimiter(value)
+
+                    return
+                }
+            }
+
+            Setting.setDelimiter(Setting.DEFAULT_PARAMETERS_KEY_DELIMITER)
+        }
+
         private fun getContainerParameters(project: Project): List<ParameterDomElement?>? {
             val filePath = project.basePath!! + Setting.DEV_DEBUG_CONTAINER_XML_PATH
             val kernelDevDebugContainer = File(filePath)
@@ -68,9 +93,11 @@ class ParseUtil {
             }
 
             val domManager = DomManager.getDomManager(project)
-            val root: RootDomElement = domManager.getFileElement(psiFile, RootDomElement::class.java)!!.getRootElement()
+            val fileElement = domManager.getFileElement(psiFile, RootDomElement::class.java) ?: return null
 
-            return root.getParameters()!!.getParameters()
+            val root: RootDomElement = fileElement.getRootElement()
+
+            return root.getParameters()?.getParameters()
         }
     }
 }

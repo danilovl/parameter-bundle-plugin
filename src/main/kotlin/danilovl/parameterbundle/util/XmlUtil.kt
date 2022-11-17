@@ -1,6 +1,7 @@
 package danilovl.parameterbundle.util
 
 import com.intellij.psi.xml.XmlTag
+import danilovl.parameterbundle.Setting
 
 class XmlUtil {
     companion object {
@@ -24,7 +25,7 @@ class XmlUtil {
             val type = xmlTag.getAttribute("type")?.value
             if (type.equals("collection")) {
                 if (actualKey !== null) {
-                    key = "$actualKey.$key"
+                    key = actualKey + Setting.PARAMETERS_KEY_DELIMITER + key
                 }
 
                 val subTags = xmlTag.subTags
@@ -36,7 +37,7 @@ class XmlUtil {
             }
 
             if (actualKey !== null) {
-                key = "$actualKey.$key"
+                key = actualKey + Setting.PARAMETERS_KEY_DELIMITER + key
             }
 
             parameters[key] = value
@@ -56,7 +57,7 @@ class XmlUtil {
             val type = xmlTag.getAttribute("type")?.value
             if (type.equals("collection")) {
                 if (actualKey !== null) {
-                    key = "$actualKey.$key"
+                    key = actualKey + Setting.PARAMETERS_KEY_DELIMITER + key
                 }
 
                 val subTags = xmlTag.subTags
@@ -77,7 +78,7 @@ class XmlUtil {
             }
 
             if (actualKey !== null) {
-                key = "$actualKey.$key"
+                key = actualKey + Setting.PARAMETERS_KEY_DELIMITER + key
             }
 
             parameters[key] = xmlTag
