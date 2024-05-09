@@ -17,8 +17,7 @@ Simple plugin for `Symfony ParameterBundle` which help to find and autocomplete 
 
 ### Requirements
 
-* IntelliJ IDEA 2022
-* PhpStorm 2022
+* IDE PhpStorm 2024
 * Symfony project with ParameterBundle
 
 ### Installation
