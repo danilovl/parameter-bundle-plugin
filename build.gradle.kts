@@ -2,35 +2,73 @@ fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
     id("java")
-    id("org.jetbrains.intellij") version "1.17.3"
+    id("org.jetbrains.intellij.platform") version "2.13.1"
     id("org.jetbrains.changelog") version "1.3.1"
     id("org.jetbrains.qodana") version "0.1.13"
-    kotlin("jvm") version "2.1.0"
+    kotlin("jvm") version "2.3.0"
 }
 
 group = properties("pluginGroup")
 version = properties("pluginVersion")
 
-// Configure project's dependencies
 repositories {
     mavenCentral()
-}
-
-// Set the JVM language level used to compile sources and generate files - Java 17 is required for 2022.3+ platforms
-kotlin {
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+    intellijPlatform {
+        defaultRepositories()
     }
 }
 
-// Configure Gradle IntelliJ Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-intellij {
-    pluginName.set(properties("pluginName"))
-    version.set(properties("platformVersion"))
-    type.set(properties("platformType"))
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
 
-    // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
-    plugins.set(properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty))
+dependencies {
+    intellijPlatform {
+        create(properties("platformType"), properties("platformVersion"))
+
+        properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty).forEach { plugin ->
+            if (plugin.contains(':')) {
+                val parts = plugin.split(':')
+                plugin(parts[0], parts[1])
+            } else {
+                bundledPlugin(plugin)
+            }
+        }
+
+        jetbrainsRuntime()
+    }
+    implementation(kotlin("stdlib-jdk8"))
+}
+
+intellijPlatform {
+    pluginConfiguration {
+        name.set(properties("pluginName"))
+
+        ideaVersion {
+            sinceBuild.set(properties("pluginSinceBuild"))
+            untilBuild.set(properties("pluginUntilBuild"))
+        }
+    }
+
+    signing {
+        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
+        privateKey.set(System.getenv("PRIVATE_KEY"))
+        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
+    }
+
+    publishing {
+        token.set(System.getenv("PUBLISH_TOKEN"))
+        val channel = properties("pluginVersion").split('-').getOrElse(1) { "default" }.split('.')[0]
+        channels.set(listOf(channel))
+    }
+
+    pluginVerification {
+        ides {
+            recommended()
+        }
+    }
 }
 
 tasks {
@@ -38,30 +76,7 @@ tasks {
         gradleVersion = properties("gradleVersion")
     }
 
-    // Configure UI tests plugin
-    // Read more: https://github.com/JetBrains/intellij-ui-test-robot
-    runIdeForUiTests {
-        systemProperty("robot-server.port", "8082")
-        systemProperty("ide.mac.message.dialogs.as.sheets", "false")
-        systemProperty("jb.privacy.policy.text", "<!--999.999-->")
-        systemProperty("jb.consents.confirmation.enabled", "false")
-    }
-
-    signPlugin {
-        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
-        privateKey.set(System.getenv("PRIVATE_KEY"))
-        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
-    }
-
     publishPlugin {
         dependsOn("patchChangelog")
-        token.set(System.getenv("PUBLISH_TOKEN"))
-        // pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
-        // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
-        // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
-        channels.set(listOf(properties("pluginVersion").split('-').getOrElse(1) { "default" }.split('.').first()))
     }
-}
-dependencies {
-    implementation(kotlin("stdlib-jdk8"))
 }

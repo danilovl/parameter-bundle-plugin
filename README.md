@@ -17,7 +17,7 @@ Simple plugin for `Symfony ParameterBundle` which help to find and autocomplete 
 
 ### Requirements
 
-* IDE PhpStorm 2025
+* IDE PhpStorm 2026+
 * Symfony project with ParameterBundle
 
 ### Installation
